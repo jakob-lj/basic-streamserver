@@ -1,2 +1,5 @@
 /node_modules
 /files/hls
+
+node/node_modules
+node/files
