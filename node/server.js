@@ -31,6 +31,7 @@ app.get("/node/:key/:filename", async (req, res) => {
     console.log(obj.jake)
 
     const ip = req.headers["x-real-ip"]
+    console.log(ip)
     console.log(req.headers["x-real-ip"])
     console.log(req.headers["x-forwared-for"])
     let firstTime = false

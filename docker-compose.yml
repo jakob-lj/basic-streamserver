@@ -1,0 +1,25 @@
+version: "3"
+services: 
+  redis:
+    image: redis:latest
+  nginx: 
+    build: .
+    ports: 
+      - "80:80"
+      - "1935:1935"
+    volumes:
+      - "./nginx/two.conf:/etc/nginx/nginx.conf"
+      - "./node/files:/mnt"
+    depends_on: 
+     - nodeserver
+  nodeserver:
+    restart: always
+    build: node
+    depends_on:
+      - redis
+    volumes:
+      - "streamvol:/app/files/"
+
+volumes:
+  streamvol:
+  
