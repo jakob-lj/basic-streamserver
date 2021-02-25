@@ -2,20 +2,21 @@ const express = require("express")
 const { promisify } = require("util");
 const fs = require('fs');
 
-const redis = require('redis')
-/* Values are hard-coded for this example, it's usually best to bring these in via file or environment variable for production */
-const client = redis.createClient(
-    6379,
-    'localhost'
-);
+// const redis = require('redis')
+// /* Values are hard-coded for this example, it's usually best to bring these in via file or environment variable for production */
+// const client = redis.createClient(
+//     'redis'
+// );
 
-const getAsync = promisify(client.get).bind(client);
+// const getAsync = promisify(client.get).bind(client);
 
-client.on("error", (e) => {
-    console.log(e)
-    console.log("client ")
-})
+// client.on("error", (e) => {
+//     console.log(e)
+//     console.log("failing")
+// })
 
+const obj = Object()
+obj.jake = 'Cool'
 
 const app = express()
 
@@ -26,27 +27,38 @@ app.get("/", (req, res) => {
 // jake = 192.168.1.110
 app.get("/node/:key/:filename", async (req, res) => {
 
-    //console.log(req.headers)
-    console.log(req.headers["x-real-ip"])
-
-
     const key = req.params.key
+    console.log(obj.jake)
+
     const ip = req.headers["x-real-ip"]
+    console.log(req.headers["x-real-ip"])
+    console.log(req.headers["x-forwared-for"])
+    let firstTime = false
+    try {
+        const lastIp = obj[`${key}-ip`]
+        const lastTime = obj[`${key}-time`]
+        console.log(obj)
 
-    console.log(client.get("secret"))
 
-    const lastIp = await getAsync(key)
-    const lastUsed = await getAsync(`${key}-time-ref`)
+        // const ip = req.headers["x-real-ip"]
 
-    console.log(`Trying to access stream via key: ${key}, from ip: ${ip}, last ip is: ${lastIp}, last used at: ${lastUsed}`)
+        // console.log(client.get("secret"))
 
-    if (lastIp !== ip) {
-        console.log("Ip is not correct")
-        if ((lastUsed - new Date()) < 60000) {
-            console.log("Karantene, forbidden!!")
-            return res.status(403).send("Forbidden")
+        // const lastIp = await getAsync(key)
+        // const lastUsed = await getAsync(`${key}-time-ref`)
+
+        //console.log(`Trying to access stream via key: ${key}, from ip: ${ip}, last ip is: ${lastIp}, last used at: ${lastUsed}`)
+
+        if (lastIp !== ip) {
+            console.log("Ip is not correct")
+            if ((lastUsed - new Date()) < 60000) {
+                console.log("Karantene, forbidden!!")
+                return res.status(403).send("Forbidden")
+            }
+            console.log("You are patient my friend. Are you frodo?")
         }
-        console.log("You are patient my friend. Are you frodo?")
+    } catch {
+        firstTime = true
     }
 
     res.set('Cache-Control', 'no-cache')
@@ -55,13 +67,15 @@ app.get("/node/:key/:filename", async (req, res) => {
     res.set('Content-Type', 'application/vnd.apple.mpegurl')
     const stream = fs.createReadStream(`./files/hls/${req.params.filename}`)
     console.log("Updating data")
-    client.set(key, ip)
-    client.set(`${key}-time-ref`, new Date())
+    obj[`${key}-ip`] = ip
+    obj[`${key}-time`] = new Date()
+    // client.set(key, ip)
+    // client.set(`${key}-time-ref`, new Date())
     stream.pipe(res)
 })
 
 app.listen(9000, () => {
     console.log('Server listening on 9000')
     console.log("GOING")
-    client.set("port", 9000)
+    // client.set("port", 9000)
 })
