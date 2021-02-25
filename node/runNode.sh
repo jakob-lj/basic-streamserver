@@ -1,1 +1,1 @@
-docker run -d --rm -p 9000:9000 -v streamvol:/app/files node_server
+docker run -d --network revy --rm -p 9000:9000 -v streamvol:/app/files node_server

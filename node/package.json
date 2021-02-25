@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "redis": "^3.0.2",
+    "util": "^0.12.3"
   }
 }
