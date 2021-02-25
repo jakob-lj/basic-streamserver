@@ -27,19 +27,18 @@ app.get("/", (req, res) => {
 // jake = 192.168.1.110
 app.get("/node/:key/:filename", async (req, res) => {
 
+    console.log('at request')
+    console.log(obj)
+
     const key = req.params.key
-    console.log(obj.jake)
 
     const ip = req.headers["x-real-ip"]
-    console.log(ip)
-    console.log(req.headers["x-real-ip"])
-    console.log(req.headers["x-forwared-for"])
+    //const ip = req.params.ip
+
     let firstTime = false
     try {
         const lastIp = obj[`${key}-ip`]
-        const lastTime = obj[`${key}-time`]
-        console.log(obj)
-
+        const lastUsed = obj[`${key}-time`]
 
         // const ip = req.headers["x-real-ip"]
 
@@ -58,18 +57,24 @@ app.get("/node/:key/:filename", async (req, res) => {
             }
             console.log("You are patient my friend. Are you frodo?")
         }
-    } catch {
+    } catch (e) {
+        console.log(e)
+        console.log('catched')
         firstTime = true
     }
 
-    res.set('Cache-Control', 'no-cache')
-    res.set('Access-Control-Allow-Origin', '* always')
-    res.set('Access-Control-Expose-Headers', 'Content-Length')
+    // res.set('Cache-Control', 'no-cache')
+    // res.set('Access-Control-Allow-Origin', '* always')
+    // res.set('Access-Control-Expose-Headers', 'Content-Length')
     res.set('Content-Type', 'application/vnd.apple.mpegurl')
     const stream = fs.createReadStream(`./files/hls/${req.params.filename}`)
     console.log("Updating data")
     obj[`${key}-ip`] = ip
     obj[`${key}-time`] = new Date()
+    console.log('after request')
+    console.log(obj)
+
+    console.log('\n\n')
     // client.set(key, ip)
     // client.set(`${key}-time-ref`, new Date())
     stream.pipe(res)
