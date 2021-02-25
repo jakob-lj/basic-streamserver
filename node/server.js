@@ -51,7 +51,8 @@ app.get("/node/:key/:filename", async (req, res) => {
 
         if (lastIp !== ip) {
             console.log("Ip is not correct")
-            if ((lastUsed - new Date()) < 60000) {
+            if ((new Date() - lastUsed) < 60000) {
+                console.log(new Date() - lastUsed)
                 console.log("Karantene, forbidden!!")
                 return res.status(403).send("Forbidden")
             }
