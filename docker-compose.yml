@@ -9,7 +9,7 @@ services:
       - "1935:1935"
     volumes:
       - "./nginx/two.conf:/etc/nginx/nginx.conf"
-      - "./node/files:/mnt"
+      - "streamvol:/mnt"
     depends_on: 
      - nodeserver
   nodeserver:
