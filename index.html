@@ -9,11 +9,12 @@
   </head>
   <body>
     <div id="myElement"></div>
-
     <script type="text/JavaScript">
+        const url = window.location.href.split("?")[1].split("=")[1]
+        console.log(url)
       jwplayer("myElement").setup({
           "playlist": [{sources:{
-                  "file": "http://63.32.168.68/hls/stream.m3u8"
+                  "file": url
           }}]
       });
     </script>
