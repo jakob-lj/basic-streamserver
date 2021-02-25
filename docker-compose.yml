@@ -9,7 +9,7 @@ services:
       - "1935:1935"
     volumes:
       - "./nginx/two.conf:/etc/nginx/nginx.conf"
-      - "./index.html:/var/www/securedstream.html"
+      - "./index.html:/var/www/jake"
       - "streamvol:/mnt"
     depends_on: 
      - nodeserver
