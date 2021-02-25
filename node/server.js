@@ -6,7 +6,7 @@ const redis = require('redis')
 /* Values are hard-coded for this example, it's usually best to bring these in via file or environment variable for production */
 const client = redis.createClient(
     6379,
-    'host.docker.internal'
+    'localhost'
 );
 
 const getAsync = promisify(client.get).bind(client);
