@@ -10,7 +10,8 @@
   <body>
     <div id="myElement"></div>
     <script type="text/JavaScript">
-        const url = window.location.href.split("?")[1].split("=")[1]
+        const tok = window.location.href.split("?")[1].split("=")[1]
+        const url = `https://stream.jakoblj.xyz/node/${tok}/stream.m3u8`
         console.log(url)
       jwplayer("myElement").setup({
           "playlist": [{sources:{
